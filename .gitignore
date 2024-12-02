@@ -16,6 +16,8 @@ testing_hip/
 interface_hip/
 sparse_hip/
 Makefile.gen
-
+build/
+.cache/
+.vscode/
 
 

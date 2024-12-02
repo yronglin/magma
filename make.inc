@@ -1,0 +1,2 @@
+BACKEND = cuda
+FORT = false
