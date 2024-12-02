@@ -327,6 +327,13 @@ libmagma_src += \
 	$(cdir)/zgeqrf_expert_batched.cpp	\
 
 # ----------
+# FP16 Batched, GPU interface
+libmagma_src += \
+	$(cdir)/hgetf2_batched.cpp			\
+	$(cdir)/hgetrf_batched.cpp			\
+	$(cdir)/hgetrf_panel_batched.cpp	\
+
+# ----------
 # vbatched, GPU interface
 libmagma_src += \
 	$(cdir)/zgetf2_vbatched.cpp		\

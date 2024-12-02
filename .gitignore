@@ -19,5 +19,5 @@ Makefile.gen
 build/
 .cache/
 .vscode/
-
+compile_commands.json
 

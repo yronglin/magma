@@ -159,6 +159,7 @@ libmagma_src += \
 	$(cdir)/zgesv_batched_small.cu		\
 	$(cdir)/zgetf2_kernels.cu		\
 	$(cdir)/zgetrf_batched_smallsq_noshfl.cu\
+	$(cdir)/hgetrf_batched_smallsq_noshfl.cu\
 	$(cdir)/getrf_setup_pivinfo.cu		\
 	$(cdir)/zhemm_batched_core.cu		\
 	$(cdir)/zher2k_batched.cpp		\
@@ -242,6 +243,13 @@ libmagma_src += \
 	$(cdir)/hlaconvert.cu	         \
 	$(cdir)/hlaswp.cu		         \
 	$(cdir)/hset_pointer.cu		     \
+	$(cdir)/hgemm_batched.cpp		 \
+	$(cdir)/hgetf2_kernels.cu		 \
+	$(cdir)/hgetf2_devicefunc.cuh	 \
+	$(cdir)/hlaswp_batched.cu		 \
+	$(cdir)/hlaswp_device.cuh		 \
+	$(cdir)/htrsm_batched_core.cpp 	 \
+	$(cdir)/htrsm_small_batched.cu	 \
 
 # aux files for mixed-precision POSV-IRGMRES
 libmagma_src += \
@@ -318,6 +326,7 @@ $(cdir)/sgetf2_kernels.$(o_ext): control/batched_kernel_param.h
 $(cdir)/dgetf2_kernels.$(o_ext): control/batched_kernel_param.h
 $(cdir)/cgetf2_kernels.$(o_ext): control/batched_kernel_param.h
 $(cdir)/zgetf2_kernels.$(o_ext): control/batched_kernel_param.h
+$(cdir)/hgetf2_kernels.$(o_ext): control/batched_kernel_param.h
 
 $(cdir)/sgetf2_native_kernel.$(o_ext): control/batched_kernel_param.h
 $(cdir)/dgetf2_native_kernel.$(o_ext): control/batched_kernel_param.h
@@ -454,6 +463,7 @@ $(cdir)/zlaswp_batched.$(o_ext): $(cdir)/zlaswp_device.cuh
 $(cdir)/claswp_batched.$(o_ext): $(cdir)/claswp_device.cuh
 $(cdir)/dlaswp_batched.$(o_ext): $(cdir)/dlaswp_device.cuh
 $(cdir)/slaswp_batched.$(o_ext): $(cdir)/slaswp_device.cuh
+$(cdir)/hlaswp_batched.$(o_ext): $(cdir)/hlaswp_device.cuh
 
 $(cdir)/zlaswp_vbatched.$(o_ext): $(cdir)/zlaswp_device.cuh
 $(cdir)/claswp_vbatched.$(o_ext): $(cdir)/claswp_device.cuh

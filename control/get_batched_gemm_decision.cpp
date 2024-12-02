@@ -156,6 +156,64 @@ magma_int_t magma_srecommend_cublas_gemm_batched(
     return use_cublas_gemm_batched;
 }
 
+/***************************************************************************//**
+    Decides which is better (magma or cublas_batched),
+    regardless of the performance of cublas stream
+
+    @return true  (1) to use cuBLAS batched gemm
+    @return false (0) to use MAGMA  batched gemm
+*******************************************************************************/
+magma_int_t magma_hrecommend_cublas_gemm_batched(
+            magma_trans_t transa, magma_trans_t transb,
+            magma_int_t m, magma_int_t n, magma_int_t k)
+{
+    magma_int_t use_cublas_gemm_batched = 0;
+    magma_int_t shape = magma_get_gemm_shape(transa, transb);
+
+    switch(shape)
+    {
+        case 0: // nn
+            {
+                use_cublas_gemm_batched = (magma_int_t) ( ( !(  k == 8  &&  n == 24 ) ) // ! (k == 8, n == 24)
+                                                       && ( !(  k == 32             ) ) // ! k == 32
+                                                        );
+            }
+            break;
+
+        case 1: // nt
+        case 2: // nc
+            {
+                use_cublas_gemm_batched = (magma_int_t) ( ( !(  k == 8  &&  n == 24 ) ) // ! (k == 8, n == 24)
+                                                       && ( !(  k == 32             ) ) // ! k == 32
+                                                        );
+            }
+            break;
+
+        case 3: // tn
+        case 6: // cn
+            {
+                use_cublas_gemm_batched = (magma_int_t) ( ( !(  k == 8  &&  n == 24 ) ) // ! (k == 8, n == 24)
+                                                       && (  (  k < 32 )              ) // k < 32
+                                                        );
+            }
+            break;
+
+        case 4: // tt
+        case 5: // tc
+        case 7: // ct
+        case 8: // cc
+            {
+                use_cublas_gemm_batched = (magma_int_t) ( ( !(  k == 8  &&  n == 24 ) ) // ! (k == 8, n == 24)
+                                                       && ( !(  k == 32             ) ) // ! k == 32
+                                                        );
+            }
+            break;
+
+        default:;
+    }
+    return use_cublas_gemm_batched;
+}
+
 
 /******************************************************************************/
 /// @see magma_srecommend_cublas_gemm_batched
@@ -295,6 +353,63 @@ magma_int_t magma_zrecommend_cublas_gemm_batched(
     @return false (0) to use batched gemm
 *******************************************************************************/
 magma_int_t magma_srecommend_cublas_gemm_stream(
+            magma_trans_t transa, magma_trans_t transb,
+            magma_int_t m, magma_int_t n, magma_int_t k)
+{
+    magma_int_t use_cublas_gemm_stream = 0;
+    magma_int_t shape = magma_get_gemm_shape(transa, transb);
+
+    switch(shape)
+    {
+        case 0: // nn
+            {
+                use_cublas_gemm_stream = (magma_int_t) ( ( (k >  32  && k <= 64 ) && (m >= 224         ) ) // k == 64, m >= 224
+                                                      || ( (k >= 128            ) && (m >= 160         ) ) // k >= 128
+                                                        );
+            }
+            break;
+
+        case 1: // nt
+        case 2: // nc
+            {
+                use_cublas_gemm_stream = (magma_int_t) ( ( (k >  32  && k <= 64 ) && (m >=  224 && m < 512) ) // k == 64, m == 224:512
+                                                      || ( (k >= 128            ) && (m >= 224            ) ) // k >= 128, m >= 224
+                                                        );
+            }
+            break;
+
+        case 3: // tn
+        case 6: // cn
+            {
+                use_cublas_gemm_stream = (magma_int_t) ( ( (k >  32  && k <= 64 ) && (m >= 192 && m <  512) ) // k == 64, m == 192:512
+                                                      || ( (k >= 128            ) && (m >= 128            ) ) // k >= 128, m >= 224
+                                                        );
+            }
+            break;
+
+        case 4: // tt
+        case 5: // tc
+        case 7: // ct
+        case 8: // cc
+            {
+                use_cublas_gemm_stream = (magma_int_t) ( ( (k >  32  && k <= 64 ) && (m >= 192 && m <  512) ) // k == 64, m == 192:512
+                                                      || ( (k >= 128            ) && (m >= 160            ) ) // k >= 128, m >= 224
+                                                        );
+            }
+            break;
+
+        default:;
+    }
+    return use_cublas_gemm_stream;
+}
+
+/***************************************************************************//**
+    Decides if cublas stream should be used for a given gemm dimension/shape
+
+    @return true  (1) to use cuBLAS gemm (non-batched) with multiple streams.
+    @return false (0) to use batched gemm
+*******************************************************************************/
+magma_int_t magma_hrecommend_cublas_gemm_stream(
             magma_trans_t transa, magma_trans_t transb,
             magma_int_t m, magma_int_t n, magma_int_t k)
 {

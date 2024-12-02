@@ -150,6 +150,14 @@ void magma_get_sgetrf_batched_nbparam(magma_int_t n, magma_int_t *nb, magma_int_
     return;
 }
 
+/// @see magma_get_zgetrf_batched_nbparam
+void magma_get_hgetrf_batched_nbparam(magma_int_t n, magma_int_t *nb, magma_int_t *recnb)
+{
+    *nb    = 128;
+    *recnb =  32;
+    return;
+}
+
 /***************************************************************************//**
     Returns in nb and recnb the crossover points for getrf
 *******************************************************************************/
@@ -764,6 +772,18 @@ magma_int_t magma_get_dtrsm_batched_stop_nb(magma_side_t side, magma_int_t m, ma
 
 /// @see magma_get_ztrsm_batched_stop_nb
 magma_int_t magma_get_strsm_batched_stop_nb(magma_side_t side, magma_int_t m, magma_int_t n)
+{
+    if(side == MagmaLeft){
+        return 16;
+    }else{    // side = MagmaRight
+        if     (n <= 4) return 4;
+        else if(n <= 8) return 8;
+        else return 32;
+    }
+}
+
+/// @see magma_get_ztrsm_batched_stop_nb
+magma_int_t magma_get_htrsm_batched_stop_nb(magma_side_t side, magma_int_t m, magma_int_t n)
 {
     if(side == MagmaLeft){
         return 16;

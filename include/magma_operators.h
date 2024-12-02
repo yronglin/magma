@@ -67,6 +67,7 @@ __host__ __device__ static inline float  imag(const float              &x) { ret
 /// @ingroup magma_complex
 __host__ __device__ static inline double             conj(const double             &x) { return x; }
 __host__ __device__ static inline float              conj(const float              &x) { return x; }
+__host__ __device__ static inline magmaHalf          conj(const magmaHalf              &x) { return x; }
 
 /// @return 2-norm absolute value of complex number x: sqrt( real(x)^2 + imag(x)^2 ).
 ///         math.h or cmath provide fabs for real numbers.

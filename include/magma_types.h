@@ -435,6 +435,19 @@ extern "C" {
 #define MAGMA_S_EQUAL(a,b)        ((a) == (b))
 #define MAGMA_S_NEGATE(a)         (-a)
 
+#define MAGMA_H_MAKE(r,i)         (magmaHalf{r})
+#define MAGMA_H_REAL(x)           (x)
+#define MAGMA_H_IMAG(x)           (magmaHalf{0.0})
+#define MAGMA_H_ADD(a, b)         ((a) + (b))
+#define MAGMA_H_SUB(a, b)         ((a) - (b))
+#define MAGMA_H_MUL(a, b)         ((a) * (b))
+#define MAGMA_H_DIV(a, b)         ((a) / (b))
+#define MAGMA_H_ABS(a)            ((a)>magmaHalf{0.0} ? (a) : -(a))
+#define MAGMA_H_ABS1(a)           ((a)>magmaHalf{0.0} ? (a) : -(a))
+#define MAGMA_H_CONJ(a)           (a)
+#define MAGMA_H_EQUAL(a,b)        ((a) == (b))
+#define MAGMA_H_NEGATE(a)         (-a)
+
 #define MAGMA_Z_ZERO              MAGMA_Z_MAKE( 0.0, 0.0)
 #define MAGMA_Z_ONE               MAGMA_Z_MAKE( 1.0, 0.0)
 #define MAGMA_Z_HALF              MAGMA_Z_MAKE( 0.5, 0.0)
@@ -458,6 +471,12 @@ extern "C" {
 #define MAGMA_S_HALF              ( 0.5)
 #define MAGMA_S_NEG_ONE           (-1.0)
 #define MAGMA_S_NEG_HALF          (-0.5)
+
+#define MAGMA_H_ZERO              (magmaHalf{ 0.0})
+#define MAGMA_H_ONE               (magmaHalf{ 1.0})
+#define MAGMA_H_HALF              (magmaHalf{ 0.5})
+#define MAGMA_H_NEG_ONE           (magmaHalf{-1.0})
+#define MAGMA_H_NEG_HALF          (magmaHalf{-0.5})
 
 #ifndef CBLAS_SADDR
 #define CBLAS_SADDR(a)  &(a)

@@ -6,6 +6,7 @@
        @date
 
        @author Ahmad Abdelfattah
+       @author Wang Yihan
 */
 
 #ifndef HGEMM_TEMPLATE_KERNEL_BATCHED_CUH

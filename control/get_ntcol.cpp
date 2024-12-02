@@ -225,6 +225,22 @@ magma_int_t magma_get_sgetrf_batched_ntcol(magma_int_t m, magma_int_t n)
     return ntcol_array[m-1];
 }
 
+/// @see magma_get_zgetrf_batched_ntcol
+magma_int_t magma_get_hgetrf_batched_ntcol(magma_int_t m, magma_int_t n)
+{
+    magma_int_t* ntcol_array; 
+
+    if(m != n || m < 0 || m > 32) return 1;
+    
+    magma_int_t arch = magma_getdevice_arch();
+    if      (arch <= 300) ntcol_array = (magma_int_t*)sgetrf_batched_ntcol_300; 
+    else if (arch <= 600) ntcol_array = (magma_int_t*)sgetrf_batched_ntcol_600;
+    else if (arch <= 700) ntcol_array = (magma_int_t*)sgetrf_batched_ntcol_700;
+    else                  ntcol_array = (magma_int_t*)ntcol_1d_default; 
+    
+    return ntcol_array[m-1];
+}
+
 /***************************************************************************//**
     @return the ntcol value for very small xgeqrf_batched ( m = n )
 *******************************************************************************/
