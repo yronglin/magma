@@ -156,7 +156,7 @@ magma_hgetrf_recpanel_batched(
         // trsm
         magmablas_htrsm_recursive_batched(
                 MagmaLeft, MagmaLower, MagmaNoTrans, MagmaUnit, 
-                n1, n2, MAGMA_S_ONE, 
+                n1, n2, MAGMA_H_ONE, 
                 dAarray(ai,   aj), ldda, 
                 dAarray(ai,aj+n1), ldda,  
                 batchCount, queue );
@@ -165,9 +165,9 @@ magma_hgetrf_recpanel_batched(
         magma_hgemm_batched_core( 
                 MagmaNoTrans, MagmaNoTrans, 
                 m-n1, n2, n1, 
-                MAGMA_S_NEG_ONE, dAarray(ai+n1,    aj), ldda, 
+                MAGMA_H_NEG_ONE, dAarray(ai+n1,    aj), ldda, 
                                  dAarray(ai   , aj+n1), ldda, 
-                MAGMA_S_ONE,     dAarray(ai+n1, aj+n1), ldda, 
+                MAGMA_H_ONE,     dAarray(ai+n1, aj+n1), ldda, 
                 batchCount, queue );
 
         // panel 2

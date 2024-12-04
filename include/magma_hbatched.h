@@ -67,6 +67,7 @@ magmablas_hgemm_batched_core(
     magmaHalf **dC_array, magma_int_t Ci, magma_int_t Cj, magma_int_t lddc,
     magma_int_t batchCount, magma_queue_t queue );
 
+void magma_check_address_alignment(magmaHalf **A, int n);
 
 void
 magma_hgemm_batched_core(

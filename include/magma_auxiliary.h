@@ -146,6 +146,9 @@ static inline magma_int_t magma_cmalloc( magmaFloatComplex_ptr  *ptr_ptr, size_t
 /// Type-safe version of magma_malloc(), for magmaDoubleComplex arrays. Allocates n*sizeof(magmaDoubleComplex) bytes.
 static inline magma_int_t magma_zmalloc( magmaDoubleComplex_ptr *ptr_ptr, size_t n ) { return magma_malloc( (magma_ptr*) ptr_ptr, n*sizeof(magmaDoubleComplex) ); }
 
+/// Type-safe version of magma_malloc(), for float arrays. Allocates n*sizeof(float) bytes.
+static inline magma_int_t magma_hmalloc( magmaHalf_ptr         *ptr_ptr, size_t n ) { return magma_malloc( (magma_ptr*) ptr_ptr, n*sizeof(magmaHalf)              ); }
+
 /// @}
 
 
@@ -175,6 +178,9 @@ static inline magma_int_t magma_cmalloc_cpu( magmaFloatComplex  **ptr_ptr, size_
 /// Type-safe version of magma_malloc_cpu(), for magmaDoubleComplex arrays. Allocates n*sizeof(magmaDoubleComplex) bytes.
 static inline magma_int_t magma_zmalloc_cpu( magmaDoubleComplex **ptr_ptr, size_t n ) { return magma_malloc_cpu( (void**) ptr_ptr, n*sizeof(magmaDoubleComplex) ); }
 
+/// Type-safe version of magma_malloc_cpu(), for float arrays. Allocates n*sizeof(float) bytes.
+static inline magma_int_t magma_hmalloc_cpu( magmaHalf              **ptr_ptr, size_t n ) { return magma_malloc_cpu( (void**) ptr_ptr, n*sizeof(magmaHalf)              ); }
+
 /// @}
 
 
@@ -200,6 +206,9 @@ static inline magma_int_t magma_cmalloc_pinned( magmaFloatComplex  **ptr_ptr, si
 
 /// Type-safe version of magma_malloc_pinned(), for magmaDoubleComplex arrays. Allocates n*sizeof(magmaDoubleComplex) bytes.
 static inline magma_int_t magma_zmalloc_pinned( magmaDoubleComplex **ptr_ptr, size_t n ) { return magma_malloc_pinned( (void**) ptr_ptr, n*sizeof(magmaDoubleComplex) ); }
+
+/// Type-safe version of magma_malloc_pinned(), for float arrays. Allocates n*sizeof(float) bytes.
+static inline magma_int_t magma_hmalloc_pinned( magmaHalf              **ptr_ptr, size_t n ) { return magma_malloc_pinned( (void**) ptr_ptr, n*sizeof(magmaHalf)              ); }
 
 /// @}
 

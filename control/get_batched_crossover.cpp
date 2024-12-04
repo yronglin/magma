@@ -788,8 +788,8 @@ magma_int_t magma_get_htrsm_batched_stop_nb(magma_side_t side, magma_int_t m, ma
     if(side == MagmaLeft){
         return 16;
     }else{    // side = MagmaRight
-        if     (n <= 4) return 4;
-        else if(n <= 8) return 8;
+        if     (n <= 8) return 2;
+        else if(n <= 16) return 4;
         else return 32;
     }
 }

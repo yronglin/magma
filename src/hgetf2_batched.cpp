@@ -9,6 +9,7 @@
    @author Tingxing Dong
    @author Wang Yihan
 */
+#include "magma_hbatched.h"
 #include "magma_internal.h"
 #include "batched_kernel_param.h"
 
@@ -99,6 +100,7 @@ magma_hgetf2_batched_v1(
     magma_int_t gbstep, magma_int_t batchCount,
     magma_queue_t queue)
 {
+    magma_check_address_alignment(dA_array, batchCount);
     #define dAarray(i, j)  dA_array, i, j
 
     magma_int_t arginfo = 0;

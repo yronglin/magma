@@ -11,6 +11,7 @@
        @author Wang Yihan
 
 */
+#include "magma_hbatched.h"
 #include "magma_internal.h"
 #include "commonblas_s.h"
 
@@ -29,12 +30,14 @@ magma_hgemm_batched_core(
     magma_int_t zero_offset = (Ai == 0 && Aj == 0 && Bi == 0 && Bj == 0 && Ci == 0 && Cj == 0);
     if(use_cublas){
         if(zero_offset){
-            cublasHgemmBatched(
-                    queue->cublas_handle(), cublas_trans_const(transA), cublas_trans_const(transB),
-                    int(m), int(n), int(k),
-                    (magmaHalf*)&alpha, (const magmaHalf**)dA_array, int(ldda),
-                            (const magmaHalf**)dB_array, int(lddb),
-                    (magmaHalf*)&beta,  (magmaHalf**)dC_array, int(lddc), int(batchCount) );
+          cublasGemmBatchedEx(
+              queue->cublas_handle(), cublas_trans_const(transA),
+              cublas_trans_const(transB), int(m), int(n), int(k),
+              (const void *)&alpha, (const void *const *)dA_array, CUDA_R_16F,
+              int(ldda), (const void *const *)dB_array, CUDA_R_16F, int(lddb),
+              (const void *)&beta, (void *const *)dC_array, CUDA_R_16F,
+              int(lddc), int(batchCount), CUDA_R_16F,
+              CUBLAS_GEMM_ALGO15_TENSOR_OP);
         }
         else{
             magmaHalf** dAarray = (magmaHalf**)queue->get_dAarray();
@@ -46,12 +49,15 @@ magma_hgemm_batched_core(
                 magma_hdisplace_pointers(dAarray, (magmaHalf**)dA_array + i, ldda, Ai, Aj, batch, queue);
                 magma_hdisplace_pointers(dBarray, (magmaHalf**)dB_array + i, lddb, Bi, Bj, batch, queue);
                 magma_hdisplace_pointers(dCarray, (magmaHalf**)dC_array + i, lddc, Ci, Cj, batch, queue);
-                cublasHgemmBatched(
-                        queue->cublas_handle(), cublas_trans_const(transA), cublas_trans_const(transB),
-                        int(m), int(n), int(k),
-                        (magmaHalf*)&alpha, (const magmaHalf**)dAarray, int(ldda),
-                                (const magmaHalf**)dBarray, int(lddb),
-                        (magmaHalf*)&beta,  (magmaHalf**)dCarray, int(lddc), int(batch) );
+
+                cublasGemmBatchedEx(
+                    queue->cublas_handle(), cublas_trans_const(transA),
+                    cublas_trans_const(transB), int(m), int(n), int(k),
+                    (const void *)&alpha, (const void *const *)dAarray,
+                    CUDA_R_16F, int(ldda), (const void *const *)dBarray,
+                    CUDA_R_16F, int(lddb), &beta, (void *const *)dCarray,
+                    CUDA_R_16F, int(lddc), int(batch), CUDA_R_16F,
+                    CUBLAS_GEMM_ALGO15_TENSOR_OP);
             }
         }
     }

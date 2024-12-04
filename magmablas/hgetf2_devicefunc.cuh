@@ -208,14 +208,23 @@ hscal5_device(int m, magmaHalf* x, magmaHalf alpha)
     __syncthreads();
 }
 
+constexpr __host__ __device__ uint64_t MinAlign(uint64_t Size, uint64_t Value) {
+  return (Size + Value - 1) & ~(Value - 1U);
+}
+
+template <class To, class From>
+constexpr __host__ __device__ To *AlignTo(From *Ptr) {
+    return (To *)(uintptr_t)MinAlign((uintptr_t)Ptr, alignof(To));
+}
+
 /******************************************************************************/
 template<int WIDTH>
 static __device__ __inline__
 void
 hgetf2_fused_device( int m, int minmn, magmaHalf rA[WIDTH], magma_int_t* dipiv,
-                     magmaHalf* swork, int &linfo, int gbstep, int &rowid)
+                     float* swork, int &linfo, int gbstep, int &rowid)
 {
-    const int tx = threadIdx.x;
+    const int tx = blockIdx.z * blockDim.x + threadIdx.x;
     const int ty = threadIdx.y;
 
     magmaHalf reg       = MAGMA_H_ZERO;
@@ -223,10 +232,10 @@ hgetf2_fused_device( int m, int minmn, magmaHalf rA[WIDTH], magma_int_t* dipiv,
     int max_id;
     magmaHalf rx_abs_max = MAGMA_H_ZERO;
 
-    magmaHalf *sx = (magmaHalf*)(swork);
-    magmaHalf* dsx = (magmaHalf*)(sx + blockDim.y * WIDTH);
-    int* isx    = (int*)(dsx + blockDim.y * m);
-    int* sipiv  = (int*)(isx + blockDim.y * m);
+    float *sx = (float*)(swork);
+    float* dsx = (float*)(sx + blockDim.y * WIDTH);
+    int* isx    = (int*)AlignTo<int>(dsx + blockDim.y * m);
+    int* sipiv  = (int*)AlignTo<int>(isx + blockDim.y * m);
     sx    += ty * WIDTH;
     dsx   += ty * m;
     isx   += ty * m;
@@ -242,6 +251,8 @@ hgetf2_fused_device( int m, int minmn, magmaHalf rA[WIDTH], magma_int_t* dipiv,
     #pragma unroll
     for(int i = 0; i < WIDTH; i++){
         // isamax and find pivot
+        // printf("############# rowid: %d\n", rowid);
+        dsx[ rowid ] = 0;
         dsx[ rowid ] = __habs(MAGMA_H_REAL( rA[i] )) + __habs(MAGMA_H_IMAG( rA[i] ));
         isx[ tx ] = tx;
         __syncthreads();
@@ -272,13 +283,13 @@ hgetf2_fused_device( int m, int minmn, magmaHalf rA[WIDTH], magma_int_t* dipiv,
         }
         __syncthreads();
 
-        reg = (rx_abs_max == MAGMA_H_ZERO ) ? MAGMA_H_ONE : MAGMA_H_DIV(MAGMA_H_ONE, sx[i] );
+        reg = (rx_abs_max == MAGMA_H_ZERO ) ? MAGMA_S_ONE : MAGMA_S_DIV(MAGMA_S_ONE, sx[i] );
         // scal and ger
         if( rowid > i ){
             rA[i] *= reg;
             #pragma unroll
             for(int j = i+1; j < WIDTH; j++){
-                rA[j] -= rA[i] * sx[j];
+                rA[j] -= rA[i] * magmaHalf{sx[j]};
             }
         }
     }

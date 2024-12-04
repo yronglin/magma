@@ -18,6 +18,123 @@
 extern "C" {
 
 // =============================================================================
+// copying sub-matrices (contiguous columns)
+
+/// Type-safe version of magma_setmatrix() for magmaHalf arrays.
+/// @ingroup magma_setmatrix
+#define magma_hsetmatrix(           m, n, hA_src, lda,  dB_dst, lddb, queue ) \
+        magma_hsetmatrix_internal(  m, n, hA_src, lda,  dB_dst, lddb, queue, __func__, __FILE__, __LINE__ )
+
+/// Type-safe version of magma_getmatrix() for magmaHalf arrays.
+/// @ingroup magma_getmatrix
+#define magma_hgetmatrix(           m, n, dA_src, ldda, hB_dst, ldb,  queue ) \
+        magma_hgetmatrix_internal(  m, n, dA_src, ldda, hB_dst, ldb,  queue, __func__, __FILE__, __LINE__ )
+
+/// Type-safe version of magma_copymatrix() for magmaHalf arrays.
+/// @ingroup magma_copymatrix
+#define magma_hcopymatrix(          m, n, dA_src, ldda, dB_dst, lddb, queue ) \
+        magma_hcopymatrix_internal( m, n, dA_src, ldda, dB_dst, lddb, queue, __func__, __FILE__, __LINE__ )
+
+/// Type-safe version of magma_setmatrix_async() for magmaHalf arrays.
+/// @ingroup magma_setmatrix
+#define magma_hsetmatrix_async(           m, n, hA_src, lda, dB_dst, lddb, queue ) \
+        magma_hsetmatrix_async_internal(  m, n, hA_src, lda, dB_dst, lddb, queue, __func__, __FILE__, __LINE__ )
+
+/// Type-safe version of magma_getmatrix_async() for magmaHalf arrays.
+/// @ingroup magma_getmatrix
+#define magma_hgetmatrix_async(           m, n, dA_src, ldda, hB_dst, ldb, queue ) \
+        magma_hgetmatrix_async_internal(  m, n, dA_src, ldda, hB_dst, ldb, queue, __func__, __FILE__, __LINE__ )
+
+/// Type-safe version of magma_copymatrix_async() for magmaHalf arrays.
+/// @ingroup magma_copymatrix
+#define magma_hcopymatrix_async(          m, n, dA_src, ldda, dB_dst, lddb, queue ) \
+        magma_hcopymatrix_async_internal( m, n, dA_src, ldda, dB_dst, lddb, queue, __func__, __FILE__, __LINE__ )
+
+static inline void
+magma_hsetmatrix_internal(
+    magma_int_t m, magma_int_t n,
+    magmaHalf const    *hA_src, magma_int_t lda,
+    magmaHalf_ptr       dB_dst, magma_int_t lddb,
+    magma_queue_t queue,
+    const char* func, const char* file, int line )
+{
+    magma_setmatrix_internal( m, n, sizeof(magmaHalf),
+                              hA_src, lda,
+                              dB_dst, lddb, queue,
+                              func, file, line );
+}
+
+static inline void
+magma_hgetmatrix_internal(
+    magma_int_t m, magma_int_t n,
+    magmaHalf_const_ptr dA_src, magma_int_t ldda,
+    magmaHalf          *hB_dst, magma_int_t ldb,
+    magma_queue_t queue,
+    const char* func, const char* file, int line )
+{
+    magma_getmatrix_internal( m, n, sizeof(magmaHalf),
+                              dA_src, ldda,
+                              hB_dst, ldb, queue,
+                              func, file, line );
+}
+
+static inline void
+magma_hcopymatrix_internal(
+    magma_int_t m, magma_int_t n,
+    magmaHalf_const_ptr dA_src, magma_int_t ldda,
+    magmaHalf_ptr       dB_dst, magma_int_t lddb,
+    magma_queue_t queue,
+    const char* func, const char* file, int line )
+{
+    magma_copymatrix_internal( m, n, sizeof(magmaHalf),
+                               dA_src, ldda,
+                               dB_dst, lddb, queue,
+                               func, file, line );
+}
+
+static inline void
+magma_hsetmatrix_async_internal(
+    magma_int_t m, magma_int_t n,
+    magmaHalf const    *hA_src, magma_int_t lda,
+    magmaHalf_ptr       dB_dst, magma_int_t lddb,
+    magma_queue_t queue,
+    const char* func, const char* file, int line )
+{
+    magma_setmatrix_async_internal( m, n, sizeof(magmaHalf),
+                                    hA_src, lda,
+                                    dB_dst, lddb, queue,
+                                    func, file, line );
+}
+
+static inline void
+magma_hgetmatrix_async_internal(
+    magma_int_t m, magma_int_t n,
+    magmaHalf_const_ptr dA_src, magma_int_t ldda,
+    magmaHalf          *hB_dst, magma_int_t ldb,
+    magma_queue_t queue,
+    const char* func, const char* file, int line )
+{
+    magma_getmatrix_async_internal( m, n, sizeof(magmaHalf),
+                                    dA_src, ldda,
+                                    hB_dst, ldb, queue,
+                                    func, file, line );
+}
+
+static inline void
+magma_hcopymatrix_async_internal(
+    magma_int_t m, magma_int_t n,
+    magmaHalf_const_ptr dA_src, magma_int_t ldda,
+    magmaHalf_ptr       dB_dst, magma_int_t lddb,
+    magma_queue_t queue,
+    const char* func, const char* file, int line )
+{
+    magma_copymatrix_async_internal( m, n, sizeof(magmaHalf),
+                                     dA_src, ldda,
+                                     dB_dst, lddb, queue,
+                                     func, file, line );
+}
+
+// =============================================================================
 // conversion routines
 void
 magmablas_slag2h(

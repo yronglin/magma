@@ -214,7 +214,9 @@ if (MAGMA_ENABLE_CUDA)
                 $<$<COMPILE_LANGUAGE:CUDA>:--compiler-options;${FORTRAN_CONVENTION}>
             )
         endif()
-
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+            set(CMAKE_CUDA_FLAGS ${CMAKE_CUDA_FLAGS} "-g -G")  # enable cuda-gdb
+        endif()
         set( MAGMA_HAVE_CUDA "1" )
 
         message( STATUS "Define -DMAGMA_HAVE_CUDA -DMAGMA_CUDA_ARCH_MIN=${MAGMA_CUDA_ARCH_MIN}" )

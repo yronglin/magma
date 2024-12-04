@@ -829,7 +829,7 @@ magma_int_t magma_hcomputecolumn_batched( magma_int_t m, magma_int_t paneloffset
 
 /******************************************************************************/
 template<int N>
-__global__ void
+__global__ __launch_bounds__(N * N) void
 hgetf2_fused_kernel_batched( int m,
                            magmaHalf** dA_array, int ai, int aj, int ldda,
                            magma_int_t** dipiv_array, magma_int_t* info_array, int batchCount)
@@ -842,8 +842,8 @@ hgetf2_fused_kernel_batched( int m,
     int linfo = (gbstep == 0) ? 0 : info_array[batchid];
 
     // shared memory workspace
-    extern __shared__ magmaHalf zdata[];
-    magmaHalf* swork = (magmaHalf*)zdata;
+    extern __shared__ float zdata[];
+    float* swork = (float*)zdata;
 
     // read
     magmaHalf* dA = dA_array[batchid] + aj * ldda + ai;
@@ -886,8 +886,8 @@ magma_hgetf2_fused_kernel_driver_batched(
 
     magma_int_t ntcol = (m >= 32)? 1 : (32/m);
     int shmem = 0, shmem_max = 0;   // not magma_int_t (causes problems with 64bit builds)
-    shmem += N * sizeof(magmaHalf);
-    shmem += m * sizeof(magmaHalf);
+    shmem += N * sizeof(float);
+    shmem += m * sizeof(float);
     shmem += m * sizeof(int);    // not magma_int_t
     shmem += N * sizeof(int);    // not magma_int_t
     shmem *= ntcol;
@@ -910,8 +910,8 @@ magma_hgetf2_fused_kernel_driver_batched(
     magma_int_t total_threads = nthreads * ntcol;
     if ( total_threads > nthreads_max || shmem > shmem_max ) {
         //printf("error: kernel %s requires too many threads or too much shared memory\n", __func__);
-        arginfo = -100;
-        return arginfo;
+            arginfo = -100;
+            return arginfo;
     }
 
     void *kernel_args[] = {&m, &dA_array, &ai, &aj, &ldda, &dipiv_array, &info_array, &batchCount};

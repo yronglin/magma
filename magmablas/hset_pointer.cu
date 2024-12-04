@@ -23,6 +23,7 @@ __global__ void kernel_hset_pointer(
     magma_int_t batch_offset)
 {
     output_array[blockIdx.x] =  input + blockIdx.x * batch_offset + row + column * lda;
+    assert((uintptr_t)output_array[blockIdx.x] % alignof(magmaHalf) == 0);
 }
 
 extern "C"

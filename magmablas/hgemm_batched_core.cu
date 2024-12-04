@@ -1407,3 +1407,12 @@ magmablas_hgemm_batched_core(
 #endif
 }
 
+__global__ void check_alignment(magmaHalf **A) {
+    assert((uintptr_t)A[threadIdx.x] % alignof(magmaHalf) == 0);
+}
+
+void magma_check_address_alignment(magmaHalf **A, int n) {
+    check_alignment<<<1, n>>>(A);
+    cudaDeviceSynchronize();
+}
+

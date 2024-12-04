@@ -40,8 +40,8 @@ magmablas_htrsm_recursive_batched(
 #define dA_array(i,j) dA_array, i, j
 #define dB_array(i,j) dB_array, i, j
 
-    const magmaHalf c_one    = MAGMA_S_ONE; 
-    const magmaHalf c_negone = MAGMA_S_NEG_ONE; 
+    const magmaHalf c_one    = MAGMA_H_ONE; 
+    const magmaHalf c_negone = MAGMA_H_NEG_ONE; 
     
     magma_int_t nrowA = (side == MagmaLeft ? m : n);
     magma_int_t shape = 0;

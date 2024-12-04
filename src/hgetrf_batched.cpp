@@ -124,8 +124,8 @@ magma_hgetrf_batched(
         #endif
     }
 
-    magmaHalf c_neg_one = MAGMA_S_NEG_ONE;
-    magmaHalf c_one     = MAGMA_S_ONE;
+    magmaHalf c_neg_one = MAGMA_H_NEG_ONE;
+    magmaHalf c_one     = MAGMA_H_ONE;
     magma_int_t nb, recnb, ib, i, pm;
     magma_get_hgetrf_batched_nbparam(n, &nb, &recnb);
 
